@@ -27,29 +27,57 @@ Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
 # EDA
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$animal_type)
+ggplot(data = Animal, aes(x = animal_type, y = time_at_shelter, fill = animal_type))+
+  geom_boxplot()+
+  labs(x = "animal_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. animal_type")
 ```
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$season)
+ggplot(data = Animal, aes(x = season, y = time_at_shelter, fill = season))+
+  geom_boxplot()+
+  labs(x = "season", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. season")
 ```
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$year)
+ggplot(data = Animal, aes(x = year, y = time_at_shelter, fill = year))+
+  geom_boxplot()+
+  labs(x = "year", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. year")
 ```
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$intake_type)
+ggplot(data = Animal, aes(x = intake_type, y = time_at_shelter, fill = intake_type))+
+  geom_boxplot()+
+  labs(x = "intake_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. intake_type")
 ```
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$outcome_type)
+ggplot(data = Animal, aes(x = outcome_type, y = time_at_shelter, fill = outcome_type))+
+  geom_boxplot()+
+  labs(x = "outcome_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. outcome_type")
 ```
 
 ```{r}
-boxplot(Animal$time_at_shelter ~ Animal$chip_status)
+ggplot(data = Animal, aes(x = chip_status, y = time_at_shelter, fill = chip_status))+
+  geom_boxplot()+
+  labs(x = "chip_status", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. chip_status")
 ```
 
 ```{r}
-ggplot(Animal, aes(x=time_at_shelter)) + geom_density()
+ggplot(Animal, aes(x=time_at_shelter)) + 
+  geom_density() +
+  labs(title="Density Plot of Time at Shelter",
+       x="Time at Shelter",
+       y="Density")
 ```
