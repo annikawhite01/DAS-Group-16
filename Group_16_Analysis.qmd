@@ -49,3 +49,7 @@ boxplot(Animal$time_at_shelter ~ Animal$outcome_type)
 ```{r}
 boxplot(Animal$time_at_shelter ~ Animal$chip_status)
 ```
+
+```{r}
+ggplot(Animal, aes(x=time_at_shelter)) + geom_density()
+```
