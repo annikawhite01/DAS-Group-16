@@ -3,3 +3,7 @@ title: "Group 16"
 format: html
 editor: visual
 ---
+
+```{r}
+Animal <- read.csv(file = "dataset16.csv")
+```
