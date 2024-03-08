@@ -23,3 +23,29 @@ Animal$outcome_type <- ifelse(Animal$outcome_type %in% c("DIED", "EUTHANIZED"), 
 Animal$chip_status <- ifelse(Animal$chip_status == "SCAN CHIP", "Chip", "No Chip")
 Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
 ```
+
+# EDA
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$animal_type)
+```
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$season)
+```
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$year)
+```
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$intake_type)
+```
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$outcome_type)
+```
+
+```{r}
+boxplot(Animal$time_at_shelter ~ Animal$chip_status)
+```
