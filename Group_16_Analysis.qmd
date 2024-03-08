@@ -7,3 +7,7 @@ editor: visual
 ```{r}
 Animal <- read.csv(file = "dataset16.csv")
 ```
+
+```{r}
+Animal$year <- as.factor(Animal$year)
+```
