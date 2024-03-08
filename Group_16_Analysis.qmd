@@ -15,4 +15,5 @@ Animal$season <- ifelse(Animal$season %in% c(3, 4, 5), "Spring", Animal$season)
 Animal$season <- ifelse(Animal$season %in% c(6, 7, 8), "Summer", Animal$season)
 Animal$season <- ifelse(Animal$season %in% c(9, 10, 11), "Fall", Animal$season)
 Animal$intake_type <- ifelse(Animal$intake_type == "STRAY", "Stray", "From Owner")
+Animal$outcome_type <- ifelse(Animal$outcome_type %in% c("DIED", "EUTHANIZED"), "Dead", "Rehomed")
 ```
