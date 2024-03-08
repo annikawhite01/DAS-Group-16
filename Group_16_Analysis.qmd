@@ -27,6 +27,7 @@ Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
 # EDA
 
 ```{r}
+library(ggplot2)
 ggplot(data = Animal, aes(x = animal_type, y = time_at_shelter, fill = animal_type))+
   geom_boxplot()+
   labs(x = "animal_type", y = "time_at_shelter")+
@@ -80,4 +81,9 @@ ggplot(Animal, aes(x=time_at_shelter)) +
   labs(title="Density Plot of Time at Shelter",
        x="Time at Shelter",
        y="Density")
+```
+
+```{r}
+ggplot(Animal, aes(x = outcome_type, y = time_at_shelter, fill = animal_type, colour = animal_type)) + 
+  geom_bar(stat = "identity")
 ```
