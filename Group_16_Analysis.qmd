@@ -3,3 +3,23 @@ title: "Group 16"
 format: html
 editor: visual
 ---
+
+```{r}
+library(dplyr)
+```
+
+```{r}
+Animal <- read.csv(file = "dataset16.csv")
+```
+
+```{r}
+Animal$year <- as.factor(Animal$year)
+Animal$season <- ifelse(Animal$month %in% c(12, 1, 2), "Winter", Animal$month)
+Animal$season <- ifelse(Animal$season %in% c(3, 4, 5), "Spring", Animal$season)
+Animal$season <- ifelse(Animal$season %in% c(6, 7, 8), "Summer", Animal$season)
+Animal$season <- ifelse(Animal$season %in% c(9, 10, 11), "Fall", Animal$season)
+Animal$intake_type <- ifelse(Animal$intake_type == "STRAY", "Stray", "From Owner")
+Animal$outcome_type <- ifelse(Animal$outcome_type %in% c("DIED", "EUTHANIZED"), "Dead", "Rehomed")
+Animal$chip_status <- ifelse(Animal$chip_status == "SCAN CHIP", "Chip", "No Chip")
+Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
+```
