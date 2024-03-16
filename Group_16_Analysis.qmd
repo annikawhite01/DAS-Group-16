@@ -46,6 +46,19 @@ Animal$time <- ifelse(Animal$year == 2017, Animal$month + 12, Animal$month)
 
 # EDA
 
+#### Numerical summary
+
+```{r}
+apply(Animal, 2, table)
+```
+
+```{r}
+library(skimr)
+skim(Animal)
+```
+
+#### Graphical summary
+
 There are six boxplots for each explanatory variables, and two bar charts to show the relationship between the type of animal(cat or dog), the circumstances of their arrival at the shelter (intake_type), and their subsequent outcomes (outcome_type).
 
 ```{r}
