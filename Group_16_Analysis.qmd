@@ -123,3 +123,8 @@ ggplot(Animal, aes(x = outcome_type, y = time_at_shelter, fill = animal_type, co
 ```
 
 The bar plot indicates that for both cats and dogs, adoption and return to owner are the most common outcomes. However, dogs have a much higher rate of being returned to their owners, which might be related to longer stays in the shelter.
+
+```{r}
+ggplot(Animal, aes(x = intake_type, y = time_at_shelter, fill = animal_type, colour = animal_type)) + 
+  geom_bar(stat = "identity")
+```
