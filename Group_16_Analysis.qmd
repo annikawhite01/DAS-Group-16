@@ -43,3 +43,105 @@ Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
 Animal$time <- Animal$month
 Animal$time <- ifelse(Animal$year == 2017, Animal$month + 12, Animal$month)
 ```
+
+# EDA
+
+#### Numerical summary
+
+```{r}
+apply(Animal, 2, table)
+```
+
+```{r}
+library(skimr)
+skim(Animal)
+```
+
+#### Graphical summary
+
+There are six boxplots for each explanatory variables, and two bar charts to show the relationship between the type of animal(cat or dog), the circumstances of their arrival at the shelter (intake_type), and their subsequent outcomes (outcome_type).
+
+```{r}
+library(ggplot2)
+ggplot(data = Animal, aes(x = animal_type, y = time_at_shelter, fill = animal_type))+
+  geom_boxplot()+
+  labs(x = "animal_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. animal_type")
+```
+
+Dogs tend to have a wider range and potentially a higher median time at the shelter compared to cats. There are also more outliers for dogs, indicating that some stay significantly longer than the median.
+
+```{r}
+ggplot(data = Animal, aes(x = season, y = time_at_shelter, fill = season))+
+  geom_boxplot()+
+  labs(x = "season", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. season")
+```
+
+The boxplot shows varied medians across different outcomes. Adoption has a lower median time at the shelter compared to animals that were fostered or returned to the owner. Euthanized animals have a wide interquartile range, suggesting variable time frames before this outcome is reached.
+
+```{r}
+ggplot(data = Animal, aes(x = year, y = time_at_shelter, fill = year))+
+  geom_boxplot()+
+  labs(x = "year", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. year")
+```
+
+The boxplot shows a lower median for the year 2016 compared to 2017, with fewer extreme outliers in 2016. This could imply a change in the shelter's operations or external factors affecting the length of stay.
+
+```{r}
+ggplot(data = Animal, aes(x = intake_type, y = time_at_shelter, fill = intake_type))+
+  geom_boxplot()+
+  labs(x = "intake_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. intake_type")
+```
+
+Stray animals show a higher median and wider interquartile range of time spent at the shelter. Confiscated animals have the shortest stay, while owner surrenders are in between but closer to confiscated in terms of the median time at the shelter.
+
+```{r}
+ggplot(data = Animal, aes(x = outcome_type, y = time_at_shelter, fill = outcome_type))+
+  geom_boxplot()+
+  labs(x = "outcome_type", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. outcome_type")
+```
+
+The boxplot shows varied medians across different outcomes. Adoption has a lower median time at the shelter compared to animals that were fostered or returned to the owner. Euthanized animals have a wide interquartile range, suggesting variable time frames before this outcome is reached.
+
+```{r}
+ggplot(data = Animal, aes(x = chip_status, y = time_at_shelter, fill = chip_status))+
+  geom_boxplot()+
+  labs(x = "chip_status", y = "time_at_shelter")+
+  theme(legend.position = "none")+
+  ggtitle("boxplot of time_at_shelter vs. chip_status")
+```
+
+Animals with a chip have a more compact interquartile range of days spent at the shelter and fewer outliers, suggesting they tend to stay for a shorter and more consistent period. In contrast, animals without a chip show a wider range and more outliers, indicating longer and more variable stays.
+
+```{r}
+ggplot(Animal, aes(x=time_at_shelter)) + 
+  geom_density() +
+  labs(title="Density Plot of Time at Shelter",
+       x="Time at Shelter",
+       y="Density")
+```
+
+This plot shows that a large proportion of animals have a very short stay at the shelter, with a sharp decrease in density as time increases. This suggests that most animals are not at the shelter for an extended period.
+
+```{r}
+ggplot(Animal, aes(x = outcome_type, y = time_at_shelter, fill = animal_type, colour = animal_type)) + 
+  geom_bar(stat = "identity")
+```
+
+The bar plot indicates that for both cats and dogs, adoption and return to owner are the most common outcomes. However, dogs have a much higher rate of being returned to their owners, which might be related to longer stays in the shelter.
+
+```{r}
+ggplot(Animal, aes(x = intake_type, y = time_at_shelter, fill = animal_type, colour = animal_type)) + 
+  geom_bar(stat = "identity")
+```
+
+The barchart compares the time_at_shelter by cats and dogs, broken down by intake_type. The intake types shown are "Confiscated", "Owner Surrender", and "Stray". It appears that the majority of animals in the shelter are strays, and among these, dogs tend to stay longer in the shelter than cats. The "Owner Surrender" category has a more even distribution between cats and dogs, but again, dogs show a longer shelter time overall. The "Confiscated" category has the least number of animals, but similar to the other categories, dogs have a longer shelter time than cats.
