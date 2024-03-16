@@ -1,7 +1,19 @@
 ---
-title: "Group 16"
-format: html
-editor: visual
+title: "Group Project 2_Group16"
+author: 'Group16 Zeyu Bai, Annika White, Hongze Shi, Wei Jin, Yijie Wu'
+number-sections: true
+format: pdf
+include-in-header: 
+  text: |
+    \usepackage{fvextra}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
+editor_options: 
+  chunk_output_type: document
+execute:
+  echo: true
+  eval: true
+  warning: false
+  message: false
 ---
 
 ```{r}
@@ -10,6 +22,14 @@ library(dplyr)
 
 ```{r}
 Animal <- read.csv(file = "dataset16.csv")
+```
+
+## Data Preprocessing
+
+First, A new column 'season' is created based on the 'month' column, with the months categorized into seasons. For 'chip_status', we combined 'UNABLE TO SCAN' and 'SCAN NO CHIP' into a single category labelled 'No Chip'. Because the number of 'BIRD' and 'WILDLIFE' categories is much smaller compared to the other two, we filtered out 'BIRD' and 'WILDLIFE' and only studied 'CAT' and 'DOG'. The last line indicates that in the original dataset, the months are represented from 1 to 12, and the years are 2016 and 2017. Therefore, if the year is 2016, we use the month directly to represent time, but if the year is 2017, we represent time by adding 12 to the month.
+
+```{r}
+table(Animal$animal_type)
 ```
 
 ```{r}
@@ -21,7 +41,6 @@ Animal$season <- ifelse(Animal$season %in% c(9, 10, 11), "Fall", Animal$season)
 Animal$chip_status <- ifelse(Animal$chip_status == "SCAN CHIP", "Chip", "No Chip")
 Animal <- subset(Animal, animal_type %in% c("CAT", "DOG"))
 Animal$time <- Animal$month
-Animal$time <- ifelse(Animal$year == 2017, Animal$month + 12, Animal$month)
 ```
 
 # EDA
