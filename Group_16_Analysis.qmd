@@ -189,7 +189,7 @@ $$
 
 where,
 
-\[
+$$
 \begin{aligned}
 \beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted} \\
 &\quad \text{ and the animal has a chip} \\
@@ -199,7 +199,7 @@ where,
 \beta_8 &= \text{effect of how many months since January 2016 since the animal arrived} \\
 &\quad \text{ at the shelter on time at shelter}
 \end{aligned}
-\]
+$$
 
 
 
