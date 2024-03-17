@@ -18,11 +18,10 @@ execute:
 
 ```{r}
 library(dplyr)
+library(MASS)
 ```
 
-```{r}
-Animal <- read.csv(file = "dataset16.csv")
-```
+# Data Processing
 
 ## Data Preprocessing
 
@@ -33,6 +32,8 @@ table(Animal$animal_type)
 ```
 
 ```{r}
+Animal <- read.csv("dataset16.csv")
+
 Animal$year <- as.factor(Animal$year)
 Animal$season <- ifelse(Animal$month %in% c(12, 1, 2), "Winter", Animal$month)
 Animal$season <- ifelse(Animal$season %in% c(3, 4, 5), "Spring", Animal$season)
@@ -44,6 +45,157 @@ Animal$time <- Animal$month
 Animal$time <- ifelse(Animal$year == 2017, Animal$month + 12, Animal$month)
 ```
 
+# Poisson Model Fitting
+
+```{r}
+# Full Model
+poisson_model1 <- glm(time_at_shelter ~ animal_type + year + intake_type + outcome_type + chip_status + month, family = poisson, data = Animal)
+summary(poisson_model1)
+```
+
+```{r}
+# Remove `animal_type`
+poisson_model2 <- glm(time_at_shelter ~ year + intake_type + outcome_type + chip_status + month, family = poisson, data = Animal)
+summary(poisson_model2)
+```
+
+```{r}
+# Include `time`
+poisson_model3 <- glm(time_at_shelter ~ animal_type + intake_type + outcome_type + chip_status + time, family = poisson, data = Animal)
+summary(poisson_model3)
+```
+
+```{r}
+# Remove `animal_type`
+poisson_model4 <- glm(time_at_shelter ~ intake_type + outcome_type + chip_status + time, family = poisson, data = Animal)
+summary(poisson_model4)
+```
+
+```{r}
+# Step Selection for Final Model
+null.model <- glm(time_at_shelter ~ 1, family = poisson, data = Animal)
+step.model <- step(null.model,scope = list(lower = null.model, upper = poisson_model3), direction = "both")
+summary(step.model)
+```
+
+The final model chosen in the step selection process includes 4 independent variables: intake type, outcome type, chip status, and time. The model equation is as follows:
+
+$$
+\begin{aligned}
+\text{time at shelter}\  = \ &\beta_0 + \beta_1 \times \mathbb{I}_{\text{intake type: owner surrender}} + \beta_2 \times \mathbb{I}_{\text{intake type: stray}} + \beta_3 \times \mathbb{I}_{\text{outcome type: died}} \\
+&+ \beta_4 \times \mathbb{I}_{\text{outcome type: euthanized}} + \beta_5 \times \mathbb{I}_{\text{outcome type: foster}} + \beta_6 \times \mathbb{I}_{\text{outcome type: returned to owner}} \\
+&+ \beta_7 \times \mathbb{I}_{\text{chip status: no chip}} + \beta_8 \times \text{time}
+\end{aligned}
+$$
+
+where,
+
+$$
+\begin{aligned}
+\beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted and the animal has a chip} \\
+\beta_1 \ \text{and} \ \beta_2 &= \text{effects of different intake types on time at shelter} \\
+\beta_3 \ \text{to} \ \beta_6 &= \text{effects of different outcome types on time at shelter} \\
+\beta_7 &= \text{effect of an animal having no chip on time at shelter} \\
+\beta_8 &= \text{effect of how many months since January 2016 since the animal arrived at the shelter on time at shelter}
+\end{aligned}
+$$
+
+#### Model Diagnostics for Poisson Regression
+
+```{r}
+# Check Assumptions
+residuals <- residuals(poisson_model4)
+
+plot(poisson_model4, which = 1)
+plot(poisson_model4, which = 2)
+```
+
+The residuals against fitted values indicate the the residuals are scattered around the zero line indicating this assumptions appears valid.
+
+From the QQ plot, it seems fairly reasonable that the normality assumption holds but there is some deviations in the tails of the distribution. 
+
+```{r}
+# Distribution Assumption
+mean(Animal$time_at_shelter)
+var(Animal$time_at_shelter)
+```
+
+Given that the mean is approximately 6.07 and the variance is substantially higher at 54.34, the data demonstrate overdispersion (where the variance is greater than the mean), which is a common characteristic in count data and can invalidate models that assume equal mean and variance such as the Poisson distribution. The model data distribution assumption here is most likely a negative binomial distribution.
+
+
+# Negative-Binomial Model Fitting
+
+```{r}
+# Full Model
+negbin_model1 <- glm.nb(time_at_shelter ~ animal_type + intake_type + outcome_type + chip_status + year + month, data = Animal)
+summary(negbin_model1)
+```
+
+```{r}
+# Use `season` to replace `month`
+negbin_model2 <- glm.nb(time_at_shelter ~ animal_type + intake_type + outcome_type + chip_status + year + season, data = Animal)
+summary(negbin_model2)
+```
+
+```{r}
+# Use `time` to replace `year` & `season`
+negbin_model3 <- glm.nb(time_at_shelter ~ animal_type + intake_type + outcome_type + chip_status + time, data = Animal)
+summary(negbin_model3)
+```
+
+```{r}
+# Remove `animal_type`
+negbin_model4 <- glm.nb(time_at_shelter ~ intake_type + outcome_type + chip_status + time, data = Animal)
+summary(negbin_model4)
+```
+
+```{r}
+# Step Selection for Final Model
+null.model <- glm.nb(time_at_shelter ~ 1, data = Animal)
+step.model <- step(null.model, scope = list(lower = null.model, upper = negbin_model3), direction = "both")
+summary(step.model)
+```
+
+The final negative-binomial model equation is represented as:
+
+$$
+\begin{aligned}
+\text{time at shelter} \ = \ &\beta_0 + \beta_1 \times \mathbb{I}_{\text{intake type: owner surrender}} + \beta_2 \times \mathbb{I}_{\text{intake type: stray}} + \beta_3 \times \mathbb{I}_{\text{outcome type: died}} \\
+&+ \beta_4 \times \mathbb{I}_{\text{outcome type: euthanized}} + \beta_5 \times \mathbb{I}_{\text{outcome type: foster}} + \beta_6 \times \mathbb{I}_{\text{outcome type: returned to owner}} \\
+&+ \beta_7 \times \mathbb{I}_{\text{chip status: no chip}} + \beta_8 \times \text{time}
+\end{aligned}
+$$
+
+where,
+
+$$
+\begin{aligned}
+\beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted and the animal has a chip} \\
+\beta_1 \ \text{and} \ \beta_2 &= \text{effects of different intake types on time at shelter} \\
+\beta_3 \ \text{to} \ \beta_6 &= \text{effects of different outcome types on time at shelter} \\
+\beta_7 &= \text{effect of an animal having no chip on time at shelter} \\
+\beta_8 &= \text{effect of how many months since January 2016 since the animal arrived at the shelter on time at shelter}
+\end{aligned}
+$$
+
+```{r}
+# Check Assumptions
+residuals <- residuals(negbin_model4)
+
+plot(negbin_model4, which = 1)
+plot(negbin_model4, which = 2)
+```
+
+The residuals appear randomly dispersed around the horizontal line without evident patterns, suggesting no major violations of model assumptions. However, slight curvilinear trends at lower fitted values may indicate potential nonlinear relationships or heteroscedasticity.
+
+While the bulk of points follow the reference line, deviations in the tails suggest the residuals may have a non-normal distribution, which is not unexpected for count data modelled with a negative binomial distribution.
+
+# Conclusion
+
+In conclusion, for the distribution and model assumption, negative binomial model performs better. For the variable, outcome, intake types and general time trend without chips are all significantly negative impact with time at shelter.
+
+In terms of further explorations, outcome type may be a confounding variable since once we know the outcome type, we also know how long the time spent at shelter is. We may also introduce new variables to replace the outcome type.
+=======
 # EDA
 
 #### Numerical summary
@@ -145,3 +297,4 @@ ggplot(Animal, aes(x = intake_type, y = time_at_shelter, fill = animal_type, col
 ```
 
 The barchart compares the time_at_shelter by cats and dogs, broken down by intake_type. The intake types shown are "Confiscated", "Owner Surrender", and "Stray". It appears that the majority of animals in the shelter are strays, and among these, dogs tend to stay longer in the shelter than cats. The "Owner Surrender" category has a more even distribution between cats and dogs, but again, dogs show a longer shelter time overall. The "Confiscated" category has the least number of animals, but similar to the other categories, dogs have a longer shelter time than cats.
+
