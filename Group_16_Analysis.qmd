@@ -25,7 +25,6 @@ Animal$time <- Animal$month
 Animal$time <- ifelse(Animal$year == 2017, Animal$month + 12, Animal$month)
 ```
 
-
 # Poisson Model Fitting
 
 ```{r}
@@ -59,6 +58,8 @@ step.model <- step(null.model,scope = list(lower = null.model, upper = poisson_m
 summary(step.model)
 ```
 
+#### Model Diagnostics for Poisson Regression
+
 ```{r}
 # Check Assumptions
 residuals <- residuals(poisson_model4)
@@ -67,12 +68,21 @@ plot(poisson_model4, which = 1)
 plot(poisson_model4, which = 2)
 ```
 
+The residuals against fitted values indicate the the residuals are scattered around the zero line indicating this assumptions appears valid.
+
+From the QQ plot, it seems fairly reasonable that the normality assumption holds but there is some deviations in the tails of the dis- tribution.
+
+#### Model Distribution Diagnostics
+
 ```{r}
 # Distribution Assumption
 mean(Animal$time_at_shelter)
 var(Animal$time_at_shelter)
 ```
 
+The data demonstrate overdispersion (where the variance is greater than the mean), which is a common characteristic in count data and can invalidate models that assume equal mean and variance such as the Poisson distribution.
+
+In summary, the model data distribution assumption here is most likely a negative binomial distribution.
 
 # Negative-Binomial Model Fitting
 
@@ -94,7 +104,6 @@ negbin_model3 <- glm.nb(time_at_shelter ~ animal_type + intake_type + outcome_ty
 summary(negbin_model3)
 ```
 
-
 ```{r}
 # Remove `animal_type`
 negbin_model4 <- glm.nb(time_at_shelter ~ intake_type + outcome_type + chip_status + time, data = Animal)
@@ -115,3 +124,7 @@ residuals <- residuals(negbin_model4)
 plot(negbin_model4, which = 1)
 plot(negbin_model4, which = 2)
 ```
+
+The residuals appear randomly dispersed around the horizontal line without evident patterns, suggesting no major violations of model assumptions. However, slight curvilinear trends at lower fitted values may indicate potential nonlinear relationships or heteroscedasticity.
+
+While the bulk of points follow the reference line, deviations in the tails suggest the residuals may have a non-normal distribution, which is not unexpected for count data modelled with a negative binomial distribution.
