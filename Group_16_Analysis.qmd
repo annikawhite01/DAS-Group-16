@@ -59,6 +59,28 @@ step.model <- step(null.model,scope = list(lower = null.model, upper = poisson_m
 summary(step.model)
 ```
 
+The final model chosen in the step selection process includes 4 independent variables: intake type, outcome type, chip status, and time. The model equation is as follows:
+
+$$
+\begin{aligned}
+\text{time at shelter} = &\beta_0 + \beta_1 \times \mathbb{I}_{\text{intake type: owner surrender}} + \beta_2 \times \mathbb{I}_{\text{intake type: stray}} + \beta_3 \times \mathbb{I}_{\text{outcome type: died}} \\
+&+ \beta_4 \times \mathbb{I}_{\text{outcome type: euthanized}} + \beta_5 \times \mathbb{I}_{\text{outcome type: foster}} + \beta_6 \times \mathbb{I}_{\text{outcome type: returned to owner}} \\
+&+ \beta_7 \times \mathbb{I}_{\text{chip status: no chip}} + \beta_8 \times \text{time}
+\end{aligned}
+$$
+
+where,
+
+$$
+\begin{aligned}
+\beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted and the animal has a chip} \\
+\beta_1 \ \text{and} \ \beta_2 &= \text{effects of different intake types on time at shelter} \\
+\beta_3 \ \text{to} \ \beta_6 &= \text{effects of different outcome types on time at shelter} \\
+\beta_7 &= \text{effect of an animal having no chip on time at shelter} \\
+\beta_8 &= \text{effect of how many months since January 2016 since the animal arrived at the shelter on time at shelter}
+\end{aligned}
+$$
+
 ```{r}
 # Check Assumptions
 residuals <- residuals(poisson_model4)
