@@ -89,11 +89,17 @@ plot(poisson_model4, which = 1)
 plot(poisson_model4, which = 2)
 ```
 
+The residuals against fitted values indicate the the residuals are scattered around the zero line indicating this assumptions appears valid.
+
+From the QQ plot, it seems fairly reasonable that the normality assumption holds but there is some deviations in the tails of the distribution. 
+
 ```{r}
 # Distribution Assumption
 mean(Animal$time_at_shelter)
 var(Animal$time_at_shelter)
 ```
+
+Given that the mean is approximately 6.07 and the variance is substantially higher at 54.34, the data demonstrate overdispersion (where the variance is greater than the mean), which is a common characteristic in count data and can invalidate models that assume equal mean and variance such as the Poisson distribution. The model data distribution assumption here is most likely a negative binomial distribution.
 
 
 # Negative-Binomial Model Fitting
