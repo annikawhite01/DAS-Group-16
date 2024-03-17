@@ -273,15 +273,6 @@ where,
 
 $$
 \begin{aligned}
-\beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted and the animal has a chip} \\
-\beta_1 \ \text{and} \ \beta_2 &= \text{effects of different intake types on time at shelter} \\
-\beta_3 \ \text{to} \ \beta_6 &= \text{effects of different outcome types on time at shelter} \\
-\beta_7 &= \text{effect of an animal having no chip on time at shelter} \\
-\beta_8 &= \text{effect of how many months since January 2016 since the animal arrived at the shelter on time at shelter}
-\end{aligned}
-$$
-$$
-\begin{aligned}
 \beta_0 &= \text{mean time at shelter when intake type is confiscated and outcome type is adopted} \\
 &\quad \text{ and the animal has a chip} \\
 \beta_1 \ \text{and} \ \beta_2 &= \text{effects of different intake types on time at shelter} \\
