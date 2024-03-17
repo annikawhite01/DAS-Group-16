@@ -164,3 +164,12 @@ residuals <- residuals(negbin_model4)
 plot(negbin_model4, which = 1)
 plot(negbin_model4, which = 2)
 ```
+
+The residuals appear randomly dispersed around the horizontal line without evident patterns, suggesting no major violations of model assumptions. However, slight curvilinear trends at lower fitted values may indicate potential nonlinear relationships or heteroscedasticity.
+
+While the bulk of points follow the reference line, deviations in the tails suggest the residuals may have a non-normal distribution, which is not unexpected for count data modelled with a negative binomial distribution.
+
+
+In conclusion, for the distribution and model assumption, negative binomial model performs better. For the variable, outcome, intake types and general time trend without chips are all significantly negative impact with time at shelter.
+
+In terms of further explorations, outcome type may be a confounding variable since once we know the outcome type, we also know how long the time spent at shelter is. We may also introduce new variables to replace the outcome type.
